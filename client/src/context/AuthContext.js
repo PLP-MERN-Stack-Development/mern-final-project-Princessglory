@@ -11,9 +11,9 @@ export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Create axios instance with base URL
+  // Create axios instance with base URL from environment variable
   const apiClient = axios.create({
-    baseURL: 'http://localhost:5001',
+    baseURL: process.env.REACT_APP_API_URL || 'http://localhost:5001',
   });
 
   // Add request interceptor to include auth token - FIXED VERSION
