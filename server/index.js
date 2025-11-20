@@ -30,7 +30,30 @@ app.use(cors({
 }));
 app.use(express.json());
 
-// Routes
+// Health check and root routes (BEFORE other routes)
+app.get('/api/health', (req, res) => {
+  res.json({ 
+    status: 'OK', 
+    database: mongoose.connection.readyState === 1 ? 'Connected' : 'Disconnected',
+    timestamp: new Date().toISOString()
+  });
+});
+
+app.get('/', (req, res) => {
+  res.json({ 
+    message: 'WasteMap API Server is running!',
+    version: '1.0.0',
+    endpoints: {
+      auth: '/api/auth',
+      pickups: '/api/pickups', 
+      users: '/api/users',
+      admin: '/api/admin',
+      health: '/api/health'
+    }
+  });
+});
+
+// API Routes
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/pickups', require('./routes/pickups'));
 app.use('/api/users', require('./routes/users'));
@@ -52,30 +75,6 @@ const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 db.once('open', () => {
   console.log('📊 MongoDB connection established');
-});
-
-// Basic health check route - ADD THIS
-app.get('/api/health', (req, res) => {
-  res.json({ 
-    status: 'OK', 
-    database: mongoose.connection.readyState === 1 ? 'Connected' : 'Disconnected',
-    timestamp: new Date().toISOString()
-  });
-});
-
-// Add a root route for testing
-app.get('/', (req, res) => {
-  res.json({ 
-    message: 'WasteMap API Server is running!',
-    version: '1.0.0',
-    endpoints: {
-      auth: '/api/auth',
-      pickups: '/api/pickups', 
-      users: '/api/users',
-      admin: '/api/admin',
-      health: '/api/health'
-    }
-  });
 });
 
 const PORT = process.env.PORT || 5001;
