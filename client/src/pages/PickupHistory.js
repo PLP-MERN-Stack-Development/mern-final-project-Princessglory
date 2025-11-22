@@ -21,7 +21,7 @@ const PickupHistory = () => {
     try {
       const response = await apiClient.get('/api/pickups/my-pickups');
       const pickupData = response.data;
-      
+
       setPickups(pickupData);
     } catch (error) {
       console.error('Error fetching pickup history:', error);
@@ -50,6 +50,18 @@ const PickupHistory = () => {
     }
 
     setFilteredPickups(filtered);
+  };
+
+  const cancelPickup = async (pickupId) => {
+    try {
+      await apiClient.patch(`/api/pickups/${pickupId}/status`, { status: 'cancelled' });
+      // Refresh the pickups list
+      await fetchPickupHistory();
+      alert('Pickup request cancelled successfully!');
+    } catch (error) {
+      console.error('Error cancelling pickup:', error);
+      alert('Failed to cancel pickup request. Please try again.');
+    }
   };
 
   const getStatusBadge = (status) => {
@@ -310,7 +322,10 @@ const PickupHistory = () => {
                     )}
                     
                     {pickup.status === 'pending' && (
-                      <button className="w-full bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white py-2.5 px-4 rounded-xl text-sm font-semibold transition-all duration-200 shadow-lg shadow-red-200">
+                      <button
+                        onClick={() => cancelPickup(pickup._id)}
+                        className="w-full bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white py-2.5 px-4 rounded-xl text-sm font-semibold transition-all duration-200 shadow-lg shadow-red-200"
+                      >
                         🗑️ Cancel Request
                       </button>
                     )}
