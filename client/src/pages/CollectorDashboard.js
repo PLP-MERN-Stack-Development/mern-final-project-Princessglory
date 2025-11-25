@@ -16,7 +16,7 @@ const CollectorDashboard = () => {
   const fetchPickups = async () => {
     try {
       setLoading(true);
-      
+
       // Fetch all pickups (collectors can see all pending/assigned pickups)
       const response = await apiClient.get('/api/pickups');
       const allPickups = response.data.pickups || response.data;
@@ -24,23 +24,23 @@ const CollectorDashboard = () => {
       console.log('All pickups:', allPickups);
 
       // Filter pickups based on status and assignment
-      const assigned = allPickups.filter(pickup => 
+      const assigned = allPickups.filter(pickup =>
         pickup.assignedCollector?._id === currentUser.id && pickup.status !== 'completed'
       );
-      
-      const available = allPickups.filter(pickup => 
-        (!pickup.assignedCollector || pickup.assignedCollector._id !== currentUser.id) && 
+
+      const available = allPickups.filter(pickup =>
+        (!pickup.assignedCollector || pickup.assignedCollector._id !== currentUser.id) &&
         pickup.status === 'pending'
       );
-      
-      const completed = allPickups.filter(pickup => 
+
+      const completed = allPickups.filter(pickup =>
         pickup.assignedCollector?._id === currentUser.id && pickup.status === 'completed'
       );
 
       setAssignedPickups(assigned);
       setAvailablePickups(available);
       setCompletedPickups(completed);
-      
+
     } catch (error) {
       console.error('Error fetching pickups:', error);
     } finally {
@@ -53,7 +53,7 @@ const CollectorDashboard = () => {
       await apiClient.patch(`/api/pickups/${pickupId}/assign`, {
         collectorId: currentUser.id
       });
-      
+
       // Refresh the pickups list
       fetchPickups();
       alert('Pickup assigned to you successfully!');
@@ -66,7 +66,7 @@ const CollectorDashboard = () => {
   const handleUpdateStatus = async (pickupId, newStatus) => {
     try {
       const updateData = { status: newStatus };
-      
+
       // If completing, add actual duration
       if (newStatus === 'completed') {
         const actualDuration = prompt('Enter actual duration in minutes:');
@@ -76,7 +76,7 @@ const CollectorDashboard = () => {
       }
 
       await apiClient.patch(`/api/pickups/${pickupId}/status`, updateData);
-      
+
       // Refresh the pickups list
       fetchPickups();
       alert(`Status updated to ${newStatus} successfully!`);
@@ -94,7 +94,7 @@ const CollectorDashboard = () => {
       completed: 'bg-green-100 text-green-800',
       cancelled: 'bg-red-100 text-red-800',
     };
-    
+
     return (
       <span className={`px-3 py-1 rounded-full text-sm font-medium ${statusClasses[status] || 'bg-gray-100 text-gray-800'}`}>
         {status.replace('-', ' ')}
@@ -148,21 +148,14 @@ const CollectorDashboard = () => {
 
   const renderPickupCard = (pickup, tab) => (
     <div key={pickup._id} className="bg-white rounded-lg shadow-sm border p-6 mb-4">
-<<<<<<< HEAD
-      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start space-y-4 sm:space-y-0">
-        <div className="flex-1">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-4 space-y-2 sm:space-y-0 mb-3">
-=======
       <div className="flex justify-between items-start">
         <div className="flex-1">
           <div className="flex items-center space-x-4 mb-3">
->>>>>>> cdf9d9db283b2e370937b1df0817b724d509a289
             <h3 className="text-lg font-semibold text-gray-900 capitalize">
               {pickup.wasteType} - {pickup.quantity}
             </h3>
             {getStatusBadge(pickup.status)}
           </div>
-<<<<<<< HEAD
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-600">
             <div>
@@ -171,48 +164,25 @@ const CollectorDashboard = () => {
               <p>{pickup.address.state} {pickup.address.zipCode}</p>
             </div>
 
-=======
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-600">
-            <div>
-              <strong>Location:</strong> 
-              <p>{pickup.address.street}, {pickup.address.city}</p>
-              <p>{pickup.address.state} {pickup.address.zipCode}</p>
-            </div>
-            
->>>>>>> cdf9d9db283b2e370937b1df0817b724d509a289
             <div>
               <strong>Customer:</strong>
               <p>{pickup.user?.name || 'N/A'}</p>
               <p>{pickup.user?.phone || 'No phone'}</p>
             </div>
-<<<<<<< HEAD
 
-=======
-            
->>>>>>> cdf9d9db283b2e370937b1df0817b724d509a289
             <div>
               <strong>Scheduled:</strong>
               <p>{new Date(pickup.scheduledDate).toLocaleString()}</p>
             </div>
-<<<<<<< HEAD
 
-=======
-            
->>>>>>> cdf9d9db283b2e370937b1df0817b724d509a289
             <div>
               <strong>Description:</strong>
               <p className="truncate">{pickup.description || 'No description'}</p>
             </div>
           </div>
         </div>
-<<<<<<< HEAD
 
-        <div className="sm:ml-4 flex-shrink-0">
-=======
-        
         <div className="ml-4">
->>>>>>> cdf9d9db283b2e370937b1df0817b724d509a289
           {getActionButtons(pickup, tab)}
         </div>
       </div>
