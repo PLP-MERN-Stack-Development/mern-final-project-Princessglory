@@ -21,11 +21,7 @@ const PickupHistory = () => {
     try {
       const response = await apiClient.get('/api/pickups/my-pickups');
       const pickupData = response.data;
-<<<<<<< HEAD
 
-=======
-      
->>>>>>> cdf9d9db283b2e370937b1df0817b724d509a289
       setPickups(pickupData);
     } catch (error) {
       console.error('Error fetching pickup history:', error);
@@ -56,21 +52,6 @@ const PickupHistory = () => {
     setFilteredPickups(filtered);
   };
 
-<<<<<<< HEAD
-  const cancelPickup = async (pickupId) => {
-    try {
-      await apiClient.patch(`/api/pickups/${pickupId}/status`, { status: 'cancelled' });
-      // Refresh the pickups list
-      await fetchPickupHistory();
-      alert('Pickup request cancelled successfully!');
-    } catch (error) {
-      console.error('Error cancelling pickup:', error);
-      alert('Failed to cancel pickup request. Please try again.');
-    }
-  };
-
-=======
->>>>>>> cdf9d9db283b2e370937b1df0817b724d509a289
   const getStatusBadge = (status) => {
     const statusClasses = {
       pending: 'bg-amber-50 text-amber-800 border border-amber-200',
@@ -79,7 +60,7 @@ const PickupHistory = () => {
       completed: 'bg-emerald-50 text-emerald-800 border border-emerald-200',
       cancelled: 'bg-red-50 text-red-800 border border-red-200',
     };
-    
+
     return (
       <span className={`px-3 py-1.5 rounded-full text-xs font-semibold ${statusClasses[status] || 'bg-gray-50 text-gray-800 border border-gray-200'}`}>
         {status.replace('-', ' ')}
@@ -112,13 +93,13 @@ const PickupHistory = () => {
 
   const calculateDuration = (scheduledDate, completedDate) => {
     if (!completedDate) return 'N/A';
-    
+
     const scheduled = new Date(scheduledDate);
     const completed = new Date(completedDate);
     const diffMs = completed - scheduled;
     const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
     const diffMinutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
-    
+
     if (diffHours > 0) {
       return `${diffHours}h ${diffMinutes}m`;
     }
@@ -164,7 +145,7 @@ const PickupHistory = () => {
                 </button>
               ))}
             </div>
-            
+
             <div className="flex-1 md:max-w-sm">
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -217,7 +198,7 @@ const PickupHistory = () => {
                 {pickups.length === 0 ? 'No Pickup History Yet' : 'No Matching Pickups Found'}
               </h3>
               <p className="text-gray-600 mb-6 max-w-md mx-auto leading-relaxed">
-                {pickups.length === 0 
+                {pickups.length === 0
                   ? "Start your sustainable journey by requesting your first waste pickup. Track your environmental impact here!"
                   : "Try adjusting your search terms or filters. Every pickup request helps create cleaner communities."
                 }
@@ -249,14 +230,14 @@ const PickupHistory = () => {
                           </h3>
                           {getStatusBadge(pickup.status)}
                         </div>
-                        
+
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-600">
                           <div>
                             <strong className="text-gray-700 block mb-1">📍 Location:</strong>
                             <p>{pickup.address.street}, {pickup.address.city}</p>
                             <p>{pickup.address.state} {pickup.address.zipCode}</p>
                           </div>
-                          
+
                           <div>
                             <strong className="text-gray-700 block mb-1">📅 Schedule:</strong>
                             <p>Scheduled: {formatDate(pickup.scheduledDate)}</p>
@@ -321,22 +302,15 @@ const PickupHistory = () => {
                       <strong>Created:</strong><br/>
                       {formatDate(pickup.createdAt)}
                     </div>
-                    
+
                     {pickup.status === 'completed' && !pickup.rating && (
                       <button className="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white py-2.5 px-4 rounded-xl text-sm font-semibold transition-all duration-200 shadow-lg shadow-yellow-200">
                         ⭐ Rate Service
                       </button>
                     )}
-                    
+
                     {pickup.status === 'pending' && (
-<<<<<<< HEAD
-                      <button
-                        onClick={() => cancelPickup(pickup._id)}
-                        className="w-full bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white py-2.5 px-4 rounded-xl text-sm font-semibold transition-all duration-200 shadow-lg shadow-red-200"
-                      >
-=======
                       <button className="w-full bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white py-2.5 px-4 rounded-xl text-sm font-semibold transition-all duration-200 shadow-lg shadow-red-200">
->>>>>>> cdf9d9db283b2e370937b1df0817b724d509a289
                         🗑️ Cancel Request
                       </button>
                     )}
